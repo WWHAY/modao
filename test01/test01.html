@@ -14,12 +14,94 @@
  
 <div id="root"></div>
 <script type="text/babel">
+    //Mock data
+    const mockData = [
+        { name: '墨刀实验室', color: 'green', isPrivate: false, isLocked: false, projects: 3 },
+        { name: '墨刀魔法棒团队', color: 'orange', isPrivate: false, isLocked: false, projects: 0 },
+        { name: '超级工作组', color: 'red', isPrivate: true, isLocked: false, projects: 4 },
+        { name: '冷笑客服组', color: 'crimson', isPrivate: false, isLocked: false, projects: 4 },
+        { name: '设计部门', color: 'yellow', isPrivate: false, isLocked: false, projects: 4 },
+        { name: 'Third Reactor', color: 'blue', isPrivate: true, isLocked: true, projects: 1 }
+    ];
 
 
-ReactDOM.render(
-    <h1>Hello, Card!</h1>,
-    document.getElementById('root')
-);
+    //CardList component
+    function CardList_Component(props) {
+        return (<div id="card_list">
+            {props.arr.map((cardData) => 
+                <Card_Component data={cardData} key={cardData.name}/>
+            )}
+            <NewCard_Component />
+        </div>);
+    }
+
+    /*
+        Card component
+
+        card-circle: circle icon
+        card-info:
+            card-name: .name
+            card-locked: .isLocked
+            card-private: .isPrivate
+            card-projects:
+                card-projects-amount: .projects
+                card-projects-project
+    */
+    function Card_Component(props) {
+        let card_attr = props.data.isLocked ? 'card locked' : 'card'; 
+
+        return <div className={card_attr} onClick={(e) => Enter_Card(e, props.data)}>
+            <canvas className="card-circle" style={{ backgroundColor: props.data.color }}></canvas> 
+            <div className="card-info">
+                <p className="card-name">{props.data.name}</p>
+                <Card_Locked_SubComp isLocked={props.data.isLocked}/>
+                <Card_Private_SubComp isPrivate={props.data.isPrivate}/>
+                <div className="card-projects">
+                    <p className="card-projects card-projects-amount">{props.data.projects}</p>
+                    <p className="card-projects card-projects-project">项目</p>
+                </div>
+            </div>
+        </div>;
+    }
+
+    function Card_Locked_SubComp(props) {
+        return props.isLocked ?
+            <div className="active card-locked"><p>锁定</p></div> : 
+            <div className="card-locked"></div>;
+    }
+
+    function Card_Private_SubComp(props) {
+        return props.isPrivate ?
+            <div className="active card-private"><p>私密</p></div> : 
+            <div className="card-private"></div>;
+    }
+
+    //New card initialisation component
+    function NewCard_Component(props) {
+        return <div className="card" onClick={(e) => Create_Card(e)}>
+            <h2>新建项目组</h2>
+        </div>
+    }
+
+    
+    //Onclick functions
+    function Enter_Card(e, data) {
+        alert('Check console');
+        console.log(data); //Further operation on data
+    }
+
+    function Create_Card(e) {
+        alert('Create a new card'); //Further operation on creating card
+    }
+
+    
+    //Renderer
+    ReactDOM.render(
+        <CardList_Component arr={mockData}/>,
+        document.getElementById('root')
+    );
+
+
 </script>
  
 </body>
