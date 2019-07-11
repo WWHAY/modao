@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <title>Card</title>
 <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
-<!--rect核心库-->
+<!--react核心库-->
 <script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
 <!--提供dom相关的功能-->
 <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
@@ -23,6 +23,22 @@
     }
 
     #card_list {
+        display: grid;
+        grid-template-columns: repeat(4, 25%);
+        grid-gap: 30px 0px;
+
+        margin: 20px;
+        margin-top: 200px;
+    }
+        #card_list1 {
+        display: grid;
+        grid-template-columns: repeat(4, 25%);
+        grid-gap: 30px 0px;
+
+        margin: 20px;
+        margin-top: 200px;
+    }
+        #card_list2 {
         display: grid;
         grid-template-columns: repeat(4, 25%);
         grid-gap: 30px 0px;
@@ -79,77 +95,71 @@
         font-size: 1.5em;
     }
     .card-projects-project { display: inline-block; }
-	<!--menu-->
-	nav {
-		margin:100px auto;
-		text-align:center;
-	}
-	nav ul {
-		border-radius:10px;
-		background:linear-gradient(to bottom,#efefef,#bbbbbb);
-		padding:0 20px;
-		display:inline-table;
-		position:relative;  
-		box-shadow:1px 1px 3px #666;
-	}
-	nav ul ul {
-		display:none;
-	}
-	nav ul li {
-		float:left; 
-	}
-	nav ul::after {
-		content:"";
-		display:block;
-		clear:both;
-	}
-	nav ul li a {
-		display:block;
-		padding:25px 40px;
-		color:#000;
-		text-decoration:none;
-		font-family:'Microsoft YaHei';
-	}
-	nav ul li:hover > ul {
-		display:block;
-	}
-	nav ul li:hover {
-		background:linear-gradient(to bottom,#4f5964,#5f6975);
-	}
-	nav ul li:hover a {
-		color:#FFF;
-	}
-	nav ul ul {
-		background:#5f6975;
-		border-radius:0;
-		position:absolute;
-		top:100%;
-		padding:0;
-	}
-	nav ul ul li {
-		float:none;
-		border-top:1px solid #6b727c;
-		border-bottom:1px solid #575f6a;
-	}
-	nav ul ul li a {
-		color:#FFF;
-	}   
-	nav ul ul li a:hover {
-		background:#4b545f;
-	}
-	nav ul ul ul {
-		width:100%;
-		position:absolute;
-		left:100%;
-		top:50%;
-	}
-
+    <!--menu-->
+    nav {
+        margin:100px auto;
+        text-align:center;
+    }
+    nav ul {
+        border-radius:10px;
+        background:linear-gradient(to bottom,#efefef,#bbbbbb);
+        padding:0 20px;
+        display:inline-table;
+        position:relative;  
+        box-shadow:1px 1px 3px #666;
+    }
+    nav ul ul {
+        display:none;
+    }
+    nav ul li {
+        float:left; 
+    }
+    nav ul::after {
+        content:"";
+        display:block;
+        clear:both;
+    }
+    nav ul li a {
+        display:block;
+        padding:25px 40px;
+        color:#000;
+        text-decoration:none;
+        font-family:'Microsoft YaHei';
+    }
+    nav ul li:hover > ul {
+        display:block;
+    }
+    nav ul li:hover {
+        background:linear-gradient(to bottom,#4f5964,#5f6975);
+    }
+    nav ul li:hover a {
+        color:#FFF;
+    }
+    nav ul ul {
+        background:#5f6975;
+        border-radius:0;
+        position:absolute;
+        top:100%;
+        padding:0;
+    }
+    nav ul ul li {
+        float:none;
+        border-top:1px solid #6b727c;
+        border-bottom:1px solid #575f6a;
+    }
+    nav ul ul li a {
+        color:#FFF;
+    }   
+    nav ul ul li a:hover {
+        background:#4b545f;
+    }
 
 </style>
 </head>
 <body>
  
 <div id="root"></div>
+<div id="root_display"></div>
 <script type="text/babel">
     //Mock data
     const mockData = [
@@ -163,9 +173,9 @@
 
 
     //CardList component
-    function CardList_Component(props) {
+    function CardList_Component() {
         return (<div id="card_list">
-            {props.arr.map((cardData) => 
+            {mockData.map((cardData) => 
                 <Card_Component data={cardData} key={cardData.name}/>
             )}
             <NewCard_Component />
@@ -185,7 +195,7 @@
                 card-projects-project
     */
     function Card_Component(props) {
-        let card_attr = props.data.isLocked ? 'card locked' : 'card'; 
+        let card_attr = props.data.isLocked ? 'card locked' : 'card';
 
         return <div className={card_attr} onClick={(e) => Enter_Card(e, props.data)}>
             <canvas className="card-circle" style={{ backgroundColor: props.data.color }}></canvas> 
@@ -230,43 +240,62 @@
     function Create_Card(e) {
         alert('Create a new card'); //Further operation on creating card
     }
-	//select application
-	class FlavorForm extends React.Component {
-	  render() {
-		return (
-			<nav>
-				<ul>
-					<li><a href="#">所有项目</a>
-						<ul>
-							<li><a href="#">所有项目</a></li>
-							<li><a href="#">锁定</a></li>
-							<li><a href="#">私密</a></li>
-						</ul>
-					</li>
-				</ul>
-			</nav>   
+    //select application
+    function FlavorForm () {
+        return (
+            <nav>
+                <ul>
+                    <li><a href="#">所有项目</a>
+                        <ul>
+                            <li onClick={() => ReactDOM.render(<CardList_Component />, document.getElementById('root_display'))}><a href="#">所有项目</a></li>
+                            <li onClick={() => ReactDOM.render(<IsLockedItems />, document.getElementById('root_display'))}><a href="#">锁定</a></li>
+                            <li onClick={() => ReactDOM.render(<IsPrivateItems />, document.getElementById('root_display'))}><a href="#">私密</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>   
 
-		);
-	  }
+        );
+    }
 
-}
-    //functions
-    class Items extends React.Component {
-		render(){
-			return(
-				<div >
-					<div className="card-info">
-						<FlavorForm />
-						<CardList_Component arr={mockData} />
-					</div>
-				</div>
-			);
-		}
+    //functions about lockedItems
+    function IsLockedItems() {
+        let isLockedData = [];
+        mockData.map((data) => {
+            if(data.isLocked) isLockedData.push(data);
+        })
+        //console.log(isLockedData);
+        
+        return (<div id="card_list1">
+            {isLockedData.map((cardData) => 
+                <Card_Component data={cardData} key={cardData.name} />
+            )}
+        </div>);
+    }
+    
+    // functions about isPrivateItems
+    function IsPrivateItems(){
+        let isPrivateData = [];
+        mockData.map((data) => {
+            if(data.isPrivate) isPrivateData.push(data);
+        })
+        //console.log(isPrivateData);
+
+        return (<div id="card_list2">
+            {isPrivateData.map((cardData) => 
+                <Card_Component data={cardData} key={cardData.name} />
+            )}
+        </div>);
+    }
+    //items
+    function Items () {
+        return (<div>
+            <FlavorForm />
+        </div>);
     }
     
     //Renderer
     ReactDOM.render(
-
         <Items />,
         document.getElementById('root')
     );
